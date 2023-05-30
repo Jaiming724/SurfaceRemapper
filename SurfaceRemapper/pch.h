@@ -1,0 +1,9 @@
+#pragma once
+#include "wintoastlib.h"
+#include <Windows.h>
+#include <iostream>
+#include <memory>
+#include <assert.h>
+#include <unordered_map>
+#include <array>
+#include <functional>

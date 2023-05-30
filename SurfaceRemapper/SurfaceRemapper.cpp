@@ -1,7 +1,6 @@
-#include <Windows.h>
-#include "iostream"
+#include "pch.h"
+
 #include "WinToastHandler.h"
-#include "wintoastlib.h"
 using namespace WinToastLib;
 
 
@@ -9,6 +8,9 @@ HHOOK _hook;
 DWORD prev = 0;
 WinToast::WinToastError error;
 WinToastTemplate templ = WinToastTemplate(WinToastTemplate::ImageAndText02);
+
+
+
 
 
 LRESULT __stdcall keyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
@@ -20,7 +22,64 @@ LRESULT __stdcall keyboardHook(int nCode, WPARAM wParam, LPARAM lParam)
 		{
 			if (kbdStruct.vkCode == 131 && prev == 91)
 			{
-				WinToast::instance()->showToast(templ, new WinToastHandler(), &error);
+
+
+				INPUT ip;
+				ip.type = INPUT_KEYBOARD;
+				ip.ki.wScan = 0;
+				ip.ki.time = 0;
+				ip.ki.dwExtraInfo = 0;
+
+				std::cout << "starting" << std::endl;
+				Sleep(500); // pause for 1 second
+				// // Press the "Ctrl" key
+				ip.ki.wVk =VK_SHIFT;
+				ip.ki.dwFlags = 0; // 0 for key press
+				SendInput(1, &ip, sizeof(INPUT));
+
+				// Press the "V" key
+				ip.ki.wVk = VK_LWIN;
+				ip.ki.dwFlags = 0; // 0 for key press
+				SendInput(1, &ip, sizeof(INPUT));
+				ip.ki.wVk = 'S';
+				ip.ki.dwFlags = 0; // 0 for key press
+				SendInput(1, &ip, sizeof(INPUT));
+
+				// Release the "V" key
+				ip.ki.wVk = 'S';
+				ip.ki.dwFlags = KEYEVENTF_KEYUP;
+				SendInput(1, &ip, sizeof(INPUT));
+
+				// Release the "Ctrl" key
+				ip.ki.wVk = VK_LWIN;
+				ip.ki.dwFlags = KEYEVENTF_KEYUP;
+								SendInput(1, &ip, sizeof(INPUT));
+
+				ip.ki.wVk = VK_SHIFT;
+				ip.ki.dwFlags = KEYEVENTF_KEYUP;
+				SendInput(1, &ip, sizeof(INPUT));
+
+				// // Press the "Ctrl" key
+				// ip.ki.wVk = VK_CONTROL;
+				// ip.ki.dwFlags = 0; // 0 for key press
+				// SendInput(1, &ip, sizeof(INPUT));
+				//
+				// // Press the "V" key
+				// ip.ki.wVk = 'V';
+				// ip.ki.dwFlags = 0; // 0 for key press
+				// SendInput(1, &ip, sizeof(INPUT));
+				//
+				// // Release the "V" key
+				// ip.ki.wVk = 'V';
+				// ip.ki.dwFlags = KEYEVENTF_KEYUP;
+				// SendInput(1, &ip, sizeof(INPUT));
+				//
+				// // Release the "Ctrl" key
+				// ip.ki.wVk = VK_CONTROL;
+				// ip.ki.dwFlags = KEYEVENTF_KEYUP;
+				// SendInput(1, &ip, sizeof(INPUT));
+
+
 			}
 			prev = kbdStruct.vkCode;
 
@@ -78,6 +137,7 @@ DWORD WINAPI keyboardHookFunc(LPVOID lpParm)
 
 int main()
 {
+	
 	// Set the hook
 	WinToast::instance()->setAppName(L"WinToastExample");
 	const auto aumi = WinToast::configureAUMI(L"MingLLC", L"SurfaceRemapper", L"wintoastexample", L"20161006");
