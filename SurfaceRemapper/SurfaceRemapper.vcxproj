@@ -134,6 +134,7 @@
     <ClCompile Include="wintoastlib.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Commands.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="WinToastHandler.h" />
     <ClInclude Include="wintoastlib.h" />
